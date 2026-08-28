@@ -1,0 +1,4 @@
+interface:
+  display_name: "JetBrains Plugin Development"
+  short_description: "Build IntelliJ Platform plugins against verified APIs"
+  default_prompt: "Use $jetbrains-plugin-development to build or fix an IntelliJ Platform plugin."

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "prihod",
+  "description": "IntelliJ Platform plugin development for coding agents.",
+  "owner": {
+    "name": "Prihod",
+    "url": "https://github.com/Prihod"
+  },
+  "plugins": [
+    {
+      "name": "jetbrains-plugin-development",
+      "description": "Develop, debug, test and maintain plugins for IntelliJ Platform IDEs. Covers plugin.xml, extension points, services, actions, PSI, VFS, threading and lifecycle, the IntelliJ Platform Gradle Plugin 2.x, verification and publishing.",
+      "version": "1.0.0",
+      "source": "./",
+      "author": { "name": "Prihod" },
+      "homepage": "https://github.com/Prihod/jetbrains-plugin-development-skill",
+      "license": "Apache-2.0",
+      "category": "development",
+      "keywords": ["intellij-platform", "intellij-plugin", "jetbrains", "phpstorm", "plugin-development"]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "jetbrains-plugin-development",
+  "version": "1.0.0",
+  "description": "Develop, debug, test and maintain plugins for IntelliJ Platform IDEs — IntelliJ IDEA, PhpStorm, WebStorm, PyCharm, GoLand. Every reference carries a verify: command that re-derives its claim from a first-hand source.",
+  "author": { "name": "Prihod" },
+  "homepage": "https://github.com/Prihod/jetbrains-plugin-development-skill",
+  "license": "Apache-2.0",
+  "keywords": ["intellij-platform", "intellij-plugin", "jetbrains", "phpstorm", "plugin-development"]
+}
