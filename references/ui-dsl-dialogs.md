@@ -6,11 +6,11 @@ verify: IJ_SRC="${IJ_SRC:?}"; f=references/ui-dsl-dialogs.md; body=$(awk 'BEGIN{
 
 ## Build a dialog with the Kotlin UI DSL, and call init() yourself
 
-`DialogWrapper` (`platform/platform-api/.../DialogWrapper.java:153`, abstract class) owns
+`DialogWrapper` (`platform/platform-api/.../DialogWrapper.java`, abstract class) owns
 the window chrome and button bar; your subclass supplies the body through
-`createCenterPanel()` (`DialogWrapper.java:1044`, `protected abstract @Nullable
+`createCenterPanel()` (`DialogWrapper.java`, `protected abstract @Nullable
 JComponent createCenterPanel()`) and must call the protected `init()`
-(`DialogWrapper.java:1432`) itself — it is not called for you.
+(`DialogWrapper.java`) itself — it is not called for you.
 
 **Wrong (never calls `init()` — buttons and borders never get built):**
 
@@ -38,22 +38,22 @@ class MyDialog(project: Project) : DialogWrapper(project) {
 ```
 
 A real subclass doing exactly this is `CommandLineDialog`
-(`platform/external-system-impl/.../ui/command/line/CommandLineDialog.kt:80-84`): its
+(`platform/external-system-impl/.../ui/command/line/CommandLineDialog.kt`): its
 `init { }` block sets `title`, then ends with a bare `init()` call. Skip that call and
-`showAndGet()` (`DialogWrapper.java:1883`) still opens a window, just an empty one.
+`showAndGet()` (`DialogWrapper.java`) still opens a window, just an empty one.
 
 ## The panel/row/cell builder
 
-`panel { }` (`builder.kt:18`, returns a `DialogPanel`) is the entry point. Inside it,
-`Panel.row(label, init)` (`Panel.kt:46`/`:53`) adds a row; inside a row, `Row.cell(c)`
-(`Row.kt:135`, `fun <T : JComponent> cell(component: T): Cell<T>`) wraps any Swing
-component as a `Cell<T>`. `.align(align: Align)` (`Cell.kt:44`, values from `AlignX`/
-`AlignY` at `Align.kt:16`) controls layout. `.bindText(...)` has a different overload
-per component type — `Cell<C : JLabel>` at `label.kt:10`, and `Cell<T : JTextComponent>`
-(the one [ui-settings.md](ui-settings.md)'s example actually calls) at
-`textField.kt:47`; `.bindSelected(...)` (`button.kt:20`) is the checkbox form. A worked
-use, paired with `BoundConfigurable`
-(`platform/platform-api/.../options/BoundConfigurable.kt:15`, see
+`panel { }` (`builder.kt`, returns a `DialogPanel`) is the entry point. Inside it,
+`Panel.row(label, init)` (`Panel.kt`, two overloads — `row(label: String, …)` and
+`row(label: JLabel? = null, …)`) adds a row; inside a row, `Row.cell(c)` (`Row.kt`,
+`fun <T : JComponent> cell(component: T): Cell<T>`) wraps any Swing component as a
+`Cell<T>`. `.align(align: Align)` (`Cell.kt`, values from `AlignX`/`AlignY` at
+`Align.kt`) controls layout. `.bindText(...)` has a different overload per component
+type — `Cell<C : JLabel>` at `label.kt`, and `Cell<T : JTextComponent>` (the one
+[ui-settings.md](ui-settings.md)'s example actually calls) at `textField.kt`;
+`.bindSelected(...)` (`button.kt`) is the checkbox form. A worked use, paired with
+`BoundConfigurable` (`platform/platform-api/.../options/BoundConfigurable.kt`, see
 [ui-settings.md](ui-settings.md)), lives in
 `oauth2/src/main/kotlin/org.intellij.sdk.oauth2/AuthConfigurable.kt` (`oauth2` in
 [source-lookup-samples.md](source-lookup-samples.md)):
@@ -64,11 +64,11 @@ use, paired with `BoundConfigurable`
 For a message the user can dismiss without deciding anything, prefer a `Notification`
 over another modal dialog: get a group with
 `NotificationGroupManager.getInstance().getNotificationGroup(groupId)`
-(`notification/NotificationGroupManager.java:10`) and construct a `Notification`
-(`Notification.java:61`); the group is declared via the `notificationGroup` extension
-point (`platform/ide-core-impl/resources/META-INF/IdeCore.xml:10`). For an anchored
+(`notification/NotificationGroupManager.java`) and construct a `Notification`
+(`Notification.java`); the group is declared via the `notificationGroup` extension
+point (`platform/ide-core-impl/resources/META-INF/IdeCore.xml`). For an anchored
 popup instead of a window, use `JBPopupFactory`
-(`platform/platform-api/.../ui/popup/JBPopupFactory.java:93`, static `getInstance()`).
+(`platform/platform-api/.../ui/popup/JBPopupFactory.java`, static `getInstance()`).
 
 Reference: `platform/platform-api/src/com/intellij/openapi/ui/DialogWrapper.java`;
 `platform/platform-impl/src/com/intellij/ui/dsl/builder/builder.kt`,
