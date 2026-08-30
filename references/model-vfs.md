@@ -7,7 +7,7 @@ verify: IJ_SRC="${IJ_SRC:?}"; f=references/model-vfs.md; body=$(awk 'BEGIN{c=0}/
 ## Touch project files through the VFS, not java.io.File
 
 `VirtualFile`
-(`platform/core-api/src/com/intellij/openapi/vfs/VirtualFile.java:58`, an abstract
+(`platform/core-api/src/com/intellij/openapi/vfs/VirtualFile.java`, an abstract
 class extending `UserDataHolderBase` and implementing `ModificationTracker`) is the
 IDE's model of a file: it backs PSI, indices, and the editor. `java.io.File`/`java.nio`
 know nothing about that model.
@@ -21,7 +21,7 @@ File(path).writeText(newContent) // editors and indices keep showing stale conte
 **Right — go through the VFS so the model stays consistent:**
 
 ```kotlin
-VfsUtil.saveText(virtualFile, newContent) // platform/analysis-api .../VfsUtil.java:49
+VfsUtil.saveText(virtualFile, newContent) // platform/analysis-api .../VfsUtil.java
 ```
 
 When a file is created or changed by a tool outside the VFS's view (an external build,
@@ -31,10 +31,10 @@ a spawned process, `ProcessBuilder`), refresh afterwards so the model catches up
 you don't yet hold a `VirtualFile` for.
 
 **Listening for changes.** Subscribe to `VirtualFileManager.VFS_CHANGES`
-(`platform/core-api/.../VirtualFileManager.java:36`, a `Topic<BulkFileListener>`) on
+(`platform/core-api/.../VirtualFileManager.java`, a `Topic<BulkFileListener>`) on
 the message bus — `project.getMessageBus().connect(disposable).subscribe(VFS_CHANGES,
 listener)` — rather than polling. `BulkFileListener`
-(`platform/core-api/src/com/intellij/openapi/vfs/newvfs/BulkFileListener.java:38`)
+(`platform/core-api/src/com/intellij/openapi/vfs/newvfs/BulkFileListener.java`)
 delivers batched `VFileEvent`s after changes are applied; `AsyncFileListener`
 (`platform/core-api/.../AsyncFileListener.java`) is the variant for computing the
 listener's reaction off the EDT before a synchronous apply. Both need a `Disposable`

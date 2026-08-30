@@ -25,13 +25,13 @@ JButton(MyBundle.message("action.refresh.text"))
 ```
 
 `IconLoader.getIcon(path: String, aClass: Class<*>): Icon`
-(`platform/util/ui/src/com/intellij/openapi/util/IconLoader.kt:137`) resolves the icon
+(`platform/util/ui/src/com/intellij/openapi/util/IconLoader.kt`) resolves the icon
 relative to the caller class's classpath — the single-argument `getIcon(path: String)`
-(`IconLoader.kt:125`) is `@Deprecated(level = DeprecationLevel.ERROR)` and will not
+(`IconLoader.kt`) is `@Deprecated(level = DeprecationLevel.ERROR)` and will not
 compile; always pass the class. The same loader also picks up a `<name>_dark.svg`
 sibling automatically when the theme is dark — the `_dark.` suffix check lives at
-`platform/util/ui/src/com/intellij/ui/icons/iconUtil.kt:253`. New UI icon sets are
-selected through `ExperimentalUI` (`platform/core-ui/src/ui/ExperimentalUI.kt:22`,
+`platform/util/ui/src/com/intellij/ui/icons/iconUtil.kt`. New UI icon sets are
+selected through `ExperimentalUI` (`platform/core-ui/src/ui/ExperimentalUI.kt`,
 abstract class) rather than by the plugin switching paths itself; ship one SVG (plus
 `_dark` variant) and let the platform choose.
 
@@ -40,12 +40,12 @@ abstract class) rather than by the plugin switching paths itself; ship one SVG (
 `<resource-bundle>messages.MyBundle</resource-bundle>` in `plugin.xml`
 (`$PLUGIN_TEMPLATE_HOME/src/main/resources/META-INF/plugin.xml`) points at a
 `.properties` file; a bundle object extending `DynamicBundle`
-(`platform/core-api/src/com/intellij/DynamicBundle.java:46`) exposes typed
+(`platform/core-api/src/com/intellij/DynamicBundle.java`) exposes typed
 `message(@PropertyKey(...) key, ...)` accessors — the template's `MyBundle.kt` is a
 working instance of exactly this shape (`messages.MyBundle` in both files, matched).
 Any user-facing `String` parameter meant to hold such a resolved, localized value is
 typically annotated `@Nls` — e.g. `Configurable.focusOn(@NotNull @Nls String label)`
-(`platform/ide-core/src/com/intellij/openapi/options/Configurable.java:265`); tooling
+(`platform/ide-core/src/com/intellij/openapi/options/Configurable.java`); tooling
 flags a literal passed where `@Nls` is expected. `@Nls` itself ships in the external
 `org.jetbrains:annotations` jar, not in this `intellij-community` checkout, so it is
 cited here by real usage sites rather than by its own declaration.

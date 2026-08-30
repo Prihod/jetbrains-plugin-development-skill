@@ -6,10 +6,10 @@ verify: IJ_SRC="${IJ_SRC:?}"; f=references/ui-tool-windows.md; body=$(awk 'BEGIN
 
 ## A tool window factory renders content; it does not hold business logic
 
-`ToolWindowFactory` (`platform/platform-api/.../wm/ToolWindowFactory.kt:17`, interface
+`ToolWindowFactory` (`platform/platform-api/.../wm/ToolWindowFactory.kt`, interface
 extending `PossiblyDumbAware`) builds a tool window's UI once, in
 `@RequiresEdt fun createToolWindowContent(project: Project, toolWindow: ToolWindow)`
-(`ToolWindowFactory.kt:33`). `shouldBeAvailable(project): Boolean` (`:54`, default
+(`ToolWindowFactory.kt`). `shouldBeAvailable(project): Boolean` (default
 `true`) decides whether the stripe button even appears.
 
 **Wrong (state and work live in the factory/content class itself):**
@@ -51,12 +51,12 @@ follows exactly this shape — its `MyToolWindow` inner class reads
 `tool_window`'s `CalendarToolWindowFactory` (`tool_window` in
 [source-lookup-samples.md](source-lookup-samples.md)) is a second real factory,
 `ContentFactory.getInstance().createContent(...)` (`ide-core/.../content/
-ContentFactory.java:12`, interface) is how both attach a panel to the tool window.
+ContentFactory.java`, interface) is how both attach a panel to the tool window.
 
 ## Lifecycle
 
 Content needs a disposal owner too. `Content`
-(`platform/ide-core/src/com/intellij/ui/content/Content.java:75,77`,
+(`platform/ide-core/src/com/intellij/ui/content/Content.java`,
 `getDisposer()`/`setDisposer(@NotNull Disposable disposer)`) is the hook:
 `content.setDisposer(service)` disposes a `Disposable` — typically the backing
 service — when the content is removed, not just when the project closes. Same
@@ -67,7 +67,7 @@ service — when the content is removed, not just when the project closes. Same
 
 `<toolWindow factoryClass="..." id="..."/>` registers against the platform's
 `toolWindow` extension point — declared with `name="toolWindow"`
-(`platform/platform-resources/src/META-INF/PlatformExtensionPoints.xml:207`,
+(`platform/platform-resources/src/META-INF/PlatformExtensionPoints.xml`,
 `beanClass="com.intellij.openapi.wm.ToolWindowEP"`, `dynamic="true"`). `dynamic="true"`
 means no IDE restart is required to pick up the registration; do not assume otherwise
 when testing changes.

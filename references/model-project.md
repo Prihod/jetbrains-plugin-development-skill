@@ -6,22 +6,22 @@ verify: IJ_SRC="${IJ_SRC:?}"; f=references/model-project.md; body=$(awk 'BEGIN{c
 
 ## Project, Module and roots
 
-`Project` (`platform/core-api/src/com/intellij/openapi/project/Project.java:27`, an
+`Project` (`platform/core-api/src/com/intellij/openapi/project/Project.java`, an
 interface extending `ComponentManager` and `AreaInstance`) is the top-level container a
 plugin is handed almost everywhere — services, actions, listeners. `Module`
-(`platform/core-api/src/com/intellij/openapi/module/Module.java:28`, extending
+(`platform/core-api/src/com/intellij/openapi/module/Module.java`, extending
 `ComponentManager`, `AreaInstance`, `Disposable`) is one unit inside it; a project holds
 zero or more modules. `ComponentManager`
-(`platform/extensions/src/com/intellij/openapi/components/ComponentManager.java:32`)
+(`platform/extensions/src/com/intellij/openapi/components/ComponentManager.java`)
 is what supplies `isDisposed()` to both.
 
 **Enumerating modules and roots.**
 
 ```kotlin
-val modules = ModuleManager.getInstance(project).modules // platform/projectModel-api .../ModuleManager.kt:34
-val contentRoots = ProjectRootManager.getInstance(project).contentRoots // .../ProjectRootManager.java:32,79
-val moduleRoots = ModuleRootManager.getInstance(module) // .../ModuleRootManager.java:28
-val sourceRoots = moduleRoots.sourceRoots // .../ModuleRootModel.java:118
+val modules = ModuleManager.getInstance(project).modules // platform/projectModel-api .../ModuleManager.kt
+val contentRoots = ProjectRootManager.getInstance(project).contentRoots // .../ProjectRootManager.java
+val moduleRoots = ModuleRootManager.getInstance(module) // .../ModuleRootManager.java
+val sourceRoots = moduleRoots.sourceRoots // .../ModuleRootModel.java
 ```
 
 `ProjectRootManager` answers project-wide root questions; `ModuleRootManager`

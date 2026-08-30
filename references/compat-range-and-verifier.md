@@ -9,7 +9,7 @@ verify: PLUGIN_TEMPLATE_HOME="${PLUGIN_TEMPLATE_HOME:?}"; HOME="${HOME:?}"; body
 The version range in `plugin.xml` and whether the plugin actually loads in a given
 IDE are two different questions; only running the Plugin Verifier answers the second.
 
-`$IJ_SAMPLES/theme_basics/resources/META-INF/plugin.xml:16` writes the range by hand:
+`$IJ_SAMPLES/theme_basics/resources/META-INF/plugin.xml` writes the range by hand:
 `<idea-version since-build="221"/>`. The plugin template ships **without** an
 `<idea-version>` element at all
 (`$PLUGIN_TEMPLATE_HOME/src/main/resources/META-INF/plugin.xml`) — the official docs
@@ -48,7 +48,7 @@ measured numbers — read [compat-verifier-ides-and-cost.md](compat-verifier-ide
 
 A version range also says nothing about which IDE **products** carry a given class (bundled plugins differ across IntelliJ
 IDEA, PhpStorm, WebStorm — see [setup-dependency-origin.md](setup-dependency-origin.md) and AP-12), and the template's
-verifier wiring (`.run/Run Verifications.run.xml` locally, `.github/workflows/build.yml:142` in CI) guarantees nothing by
+verifier wiring (`.run/Run Verifications.run.xml` locally, `.github/workflows/build.yml` in CI) guarantees nothing by
 existing: compatibility is never declared until that job has run and passed for the target IDE(s).
 
 ## Widening a range with no old IDE to verify it against

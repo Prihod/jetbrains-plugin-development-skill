@@ -21,9 +21,9 @@ reference, renaming a symbol, understanding structure: go to **PSI**. Answering 
 files declare a class named X" across a whole project without opening each one: use
 **Stub/Index**.
 
-**PSI.** `PsiFile` (`platform/core-api/src/com/intellij/psi/PsiFile.java:26`, extends
+**PSI.** `PsiFile` (`platform/core-api/src/com/intellij/psi/PsiFile.java`, extends
 `PsiFileSystemItem`) and `PsiElement`
-(`platform/core-api/src/com/intellij/psi/PsiElement.java:35`, extends `UserDataHolder`,
+(`platform/core-api/src/com/intellij/psi/PsiElement.java`, extends `UserDataHolder`,
 `Iconable`) form the parsed tree. `PsiManager.findFile(VirtualFile)` gets the `PsiFile`
 for a `VirtualFile`; `PsiDocumentManager.getPsiFile(Document)` /
 `.getDocument(PsiFile)` cross between the Document and PSI layers, and
@@ -40,7 +40,7 @@ Caching a raw `PsiElement` across two read actions is AP-05 — use a
 `true` and most index-backed lookups throw `IndexNotReadyException`
 (`platform/core-api/src/com/intellij/openapi/project/IndexNotReadyException.java`)
 unless the caller is `DumbAware`
-(`platform/core-api/src/com/intellij/openapi/project/DumbAware.java:26`). Querying an
+(`platform/core-api/src/com/intellij/openapi/project/DumbAware.java`). Querying an
 index with no dumb-mode guard is AP-14:
 
 **Wrong (no dumb-mode guard):**
@@ -60,9 +60,9 @@ fun resolve(project: Project, fqName: String, scope: GlobalSearchScope): PsiClas
 ```
 
 **Stub/Index.** `StubIndex.getInstance().getElements(key, ...)`
-(`platform/indexing-api/src/com/intellij/psi/stubs/StubIndex.java:36,93`) and
+(`platform/indexing-api/src/com/intellij/psi/stubs/StubIndex.java`) and
 `FileBasedIndex.getInstance().getValues(id, key, scope)`
-(`platform/indexing-api/src/com/intellij/util/indexing/FileBasedIndex.java:126,148`)
+(`platform/indexing-api/src/com/intellij/util/indexing/FileBasedIndex.java`)
 answer "which elements/files match this key" from a prebuilt index, without parsing
 every candidate file — this is what makes project-wide search and completion tractable.
 
