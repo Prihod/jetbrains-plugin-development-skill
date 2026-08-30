@@ -12,10 +12,10 @@ running it is how removed APIs end up shipped.
 1. **Found a deprecated API** — `@Deprecated`, KDoc/javadoc `@deprecated`, or
    `@ApiStatus.ScheduledForRemoval` is the signal.
 2. **Look for the replacement** — the javadoc usually names it directly:
-   `PropertiesComponent.getValues(String)` (`PropertiesComponent.java:69`) says
-   `@deprecated Use {@link #getList(String)}`, declared at `:77`.
+   `PropertiesComponent.getValues(String)` (`PropertiesComponent.java`) says
+   `@deprecated Use {@link #getList(String)}`.
 3. **Check the target versions** — `@ApiStatus.ScheduledForRemoval(inVersion = "...")`
-   gives a hard deadline, e.g. `IntellijSensitiveDataValidator.kt:169` carries
+   gives a hard deadline, e.g. `IntellijSensitiveDataValidator.kt` carries
    `inVersion = "2026.1"`. Compare that deadline against the plugin's own
    `since`/`until` ([compat-range-and-verifier.md](compat-range-and-verifier.md)) —
    if removal falls inside the supported range, the old call already breaks part of
@@ -48,8 +48,8 @@ val tags: Array<String>? = properties.getValues("myPlugin.tags")
 
 ## Logging and diagnosis
 
-`Logger.getInstance(Class<?>)` (`Logger.java:114`; the category-string overload is
-at `:110`) is the standard entry point — `Logger` is abstract, there is no
+`Logger.getInstance(Class<?>)` (`Logger.java`; the category-string overload is
+`getInstance(String category)`) is the standard entry point — `Logger` is abstract, there is no
 constructor to call.
 
 Where the output lands depends on which run configuration launched the IDE; the

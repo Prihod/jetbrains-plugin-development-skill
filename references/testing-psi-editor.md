@@ -33,32 +33,32 @@ myFixture.type("bar")
 ```
 
 `myFixture.getDocument(psiFile)` above is `CodeInsightTestFixture.getDocument(PsiFile)`
-(`CodeInsightTestFixture.java:669`) — a different method from
+(`CodeInsightTestFixture.java`) — a different method from
 `PsiDocumentManager.getDocument(PsiFile)` (see [model-psi.md](model-psi.md)), despite the
 identical name.
 
 `PsiDocumentManager.commitDocument(Document)`
-(`platform/core-api/src/com/intellij/psi/PsiDocumentManager.java:128`, class at `:23`) is
+(`platform/core-api/src/com/intellij/psi/PsiDocumentManager.java`) is
 the explicit sync point. `CodeInsightTestFixture.type(String)`
-(`platform/testFramework/src/com/intellij/testFramework/fixtures/CodeInsightTestFixture.java:685`)
-and `configureByText(String, String)` (`:196`) drive the real typing/parsing path and
+(`platform/testFramework/src/com/intellij/testFramework/fixtures/CodeInsightTestFixture.java`)
+and `configureByText(String, String)` drive the real typing/parsing path and
 keep Document and PSI in sync without a manual call.
 
 ## Comparing results and asserting on PSI
 
 For "run an action, check the outcome" tests, use `checkResultByFile(String)`
-(`CodeInsightTestFixture.java:238`) against a `_after` file in `testData` rather than
+(`CodeInsightTestFixture.java`) against a `_after` file in `testData` rather than
 asserting on fragments of `psiFile.text` — see
 [testing-levels-fixtures.md](testing-levels-fixtures.md) for the `foo.xml`/`foo_after.xml`
-convention. `completeBasic()` (`:648`) drives completion tests the same way: configure,
+convention. `completeBasic()` drives completion tests the same way: configure,
 invoke, assert on the returned `LookupElement[]`
-(`LookupElement`, `platform/analysis-api/src/com/intellij/codeInsight/lookup/LookupElement.java:27`).
+(`LookupElement`, `platform/analysis-api/src/com/intellij/codeInsight/lookup/LookupElement.java`).
 
 For structural PSI assertions, walk the tree instead of matching substrings in
 `psiFile.text` — `PsiErrorElementUtil.hasErrors(Project, VirtualFile)`
-(`platform/platform-impl/src/com/intellij/util/PsiErrorElementUtil.java:26`) is the
+(`platform/platform-impl/src/com/intellij/util/PsiErrorElementUtil.java`) is the
 template's own check that a parsed file has no `PsiErrorElement`s
-(`platform/core-api/src/com/intellij/psi/PsiErrorElement.java:15`, interface extends
+(`platform/core-api/src/com/intellij/psi/PsiErrorElement.java`, interface extends
 `PsiElement`), used exactly as
 `PsiErrorElementUtil.hasErrors(project, xmlFile.virtualFile)` in `MyPluginTest.kt`.
 
