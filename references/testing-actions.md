@@ -10,12 +10,12 @@ verify: IJ_SRC="${IJ_SRC:?}"; f=references/testing-actions.md; body=$(awk 'BEGIN
 neutral harness: it decides the action's `DataContext` for you, and what it decides is
 "whatever the fixture's open editor implies".
 
-`CodeInsightTestFixtureImpl.testAction` (`:1138-1145`) calls
+`CodeInsightTestFixtureImpl.testAction` calls
 `TestActionEvent.createTestEvent(action)` with no `DataContext`; that overload falls back
-to `DataManager.getInstance().getDataContext()` (`TestActionEvent.java:62-69`). Under a
+to `DataManager.getInstance().getDataContext()` (`TestActionEvent.java`). Under a
 light fixture the data provider behind it is `TestDataProvider`
-(installed at `LightIdeaTestFixtureImpl.java:59`), which serves `PROJECT`, `EDITOR`,
-`NAVIGATE_IN_EDITOR` and `FILE_EDITOR` (`TestDataProvider.java:42-58`) — everything else
+(installed at `LightIdeaTestFixtureImpl.java`), which serves `PROJECT`, `EDITOR`,
+`NAVIGATE_IN_EDITOR` and `FILE_EDITOR` (`TestDataProvider.java`) — everything else
 an action reads is derived from that editor by the platform's data rules.
 
 **Measured on this Baseline** with a probe action that reads each key inside `update()`
@@ -51,9 +51,9 @@ action.update(e)
 assertTrue(e.presentation.isEnabled)   // assert the enablement you meant to test
 ```
 
-`SimpleDataContext.builder()` (`:64`) → `add(DataKey, T)` → `build()` (`:108`) is the
+`SimpleDataContext.builder()` → `add(DataKey, T)` → `build()` is the
 type-safe form; `getSimpleContext(Map, DataContext)` is deprecated in the same file.
-`TestActionEvent.createTestEvent(AnAction, DataContext)` (`:57`) is the overload that
+`TestActionEvent.createTestEvent(AnAction, DataContext)` is the overload that
 takes the context — the single-argument one is the one that does not.
 
 Assert on the `Presentation` (`e.presentation.isEnabled` / `isVisible`) for `update()`

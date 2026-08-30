@@ -11,19 +11,19 @@ under a read action (see [model-psi.md](model-psi.md)); only an actual document 
 needs a write action — getting that boundary wrong is the trap common to all four.
 
 **Inspections.** `LocalInspectionTool`
-(`platform/analysis-api/.../codeInspection/LocalInspectionTool.java:37`, extends
+(`platform/analysis-api/.../codeInspection/LocalInspectionTool.java`, extends
 `InspectionProfileEntry`) reports problems via `ProblemsHolder.registerProblem(...)`
-(`.../codeInspection/ProblemsHolder.java:81`) from a `PsiElementVisitor` returned by
+(`.../codeInspection/ProblemsHolder.java`) from a `PsiElementVisitor` returned by
 `buildVisitor()` — it never edits PSI itself. Registered as `localInspection`; worked in
 `comparing_string_references_inspection` and `code_inspection_qodana` (mapped in
 [source-lookup-samples.md](source-lookup-samples.md)).
 
 **Intentions.** `IntentionAction`
-(`platform/analysis-api/.../intention/IntentionAction.java:35`, extends `FileModifier`)
+(`platform/analysis-api/.../intention/IntentionAction.java`, extends `FileModifier`)
 runs `invoke()` inside a command, and inside a write action too if
 `startInWriteAction()` returns `true` — the default in
 `BaseIntentionAction`/`PsiElementBaseIntentionAction`
-(`platform/analysis-api/.../intention/impl/BaseIntentionAction.java:27`). Anything slow
+(`platform/analysis-api/.../intention/impl/BaseIntentionAction.java`). Anything slow
 or UI-blocking (a dialog) has no business running while that write action is held:
 
 **Wrong (dialog shown while the platform holds the write action for you):**
@@ -55,16 +55,16 @@ Registered as `intentionAction`; worked in `conditional_operator_intention` (map
 [source-lookup-samples.md](source-lookup-samples.md)).
 
 **Completion.** `CompletionContributor.extend(type, pattern, provider)`
-(`.../completion/CompletionContributor.java:145`) is called from the contributor's own
+(`.../completion/CompletionContributor.java`) is called from the contributor's own
 constructor, not lazily; `provider` is a `CompletionProvider`
-(`.../completion/CompletionProvider.java:18`, `addCompletions(...)`).
+(`.../completion/CompletionProvider.java`, `addCompletions(...)`).
 `CompletionContributor`'s own javadoc documents this whole pipeline as running inside a
-read action (`.../CompletionContributor.java:159-161`) — a blocking call there freezes
+read action (`.../CompletionContributor.java`) — a blocking call there freezes
 typing since it can't honor `ProgressManager.checkCanceled()`. Registered as
 `completion.contributor`.
 
 **Inlay hints.** `InlayHintsProvider.createCollector(file, editor)`
-(`platform/lang-api/.../hints/declarative/InlayHintsProvider.kt:30`) returns a collector
+(`platform/lang-api/.../hints/declarative/InlayHintsProvider.kt`) returns a collector
 that reads PSI/document state to place hints; it never writes. Registered as
 `codeInsight.declarativeInlayProvider`.
 

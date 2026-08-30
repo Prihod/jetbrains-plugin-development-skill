@@ -47,9 +47,9 @@ The ids are constants in `platform/ide-core/src/com/intellij/openapi/actionSyste
 
 | Group id | Constant | What it actually is | Installed at |
 |---|---|---|---|
-| `ProjectViewPopupMenu` | `GROUP_PROJECT_VIEW_POPUP` | right-click on a file or directory node in the Project tool window | `lang-impl/.../AbstractProjectViewPaneWithAsyncSupport.java:180` |
-| `EditorPopupMenu` | `GROUP_EDITOR_POPUP` | right-click inside the editor text | `platform-impl/.../fileEditor/impl/text/TextEditorComponent.kt:74` |
-| `EditorTabPopupMenu` | `GROUP_EDITOR_TAB_POPUP` | right-click on an editor tab | `platform-impl/.../fileEditor/impl/EditorTabbedContainer.kt:157` |
+| `ProjectViewPopupMenu` | `GROUP_PROJECT_VIEW_POPUP` | right-click on a file or directory node in the Project tool window | `lang-impl/.../AbstractProjectViewPaneWithAsyncSupport.java` |
+| `EditorPopupMenu` | `GROUP_EDITOR_POPUP` | right-click inside the editor text | `platform-impl/.../fileEditor/impl/text/TextEditorComponent.kt` |
+| `EditorTabPopupMenu` | `GROUP_EDITOR_TAB_POPUP` | right-click on an editor tab | `platform-impl/.../fileEditor/impl/EditorTabbedContainer.kt` |
 
 ```xml
 <action id="com.example.ShowFileInfo" class="com.example.ShowFileInfoAction" text="Show File Info">
@@ -60,7 +60,7 @@ The ids are constants in `platform/ide-core/src/com/intellij/openapi/actionSyste
 `$IJ_SAMPLES/action_basics` wires `EditorPopupMenu`, never `ProjectViewPopupMenu` — copying
 that sample for a "file context menu" request lands the action on the editor menu instead.
 The group also decides what the `DataContext` holds: the Project View pane's
-`uiDataSnapshot` (`AbstractProjectViewPane.java:420`) supplies the tree selection —
+`uiDataSnapshot` (`AbstractProjectViewPane.java`) supplies the tree selection —
 `PlatformCoreDataKeys.SELECTED_ITEMS`, `CommonDataKeys.NAVIGATABLE_ARRAY`, a lazy
 `CommonDataKeys.PSI_ELEMENT` — and no `CommonDataKeys.EDITOR`. Testing that context takes
 a deliberate `DataContext`; see [testing-actions.md](testing-actions.md).

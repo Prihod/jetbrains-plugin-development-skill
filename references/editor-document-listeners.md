@@ -6,8 +6,8 @@ verify: IJ_SRC="${IJ_SRC:?}"; f=references/editor-document-listeners.md; body=$(
 
 ## Read editor state under a read action, change the document under a write action
 
-`Editor` (`platform/editor-ui-api/.../Editor.java:98`, interface extending `UserDataHolder`)
-exposes a `Document` (`platform/core-api/.../Document.java:35`, also extends
+`Editor` (`platform/editor-ui-api/.../Editor.java`, interface extending `UserDataHolder`)
+exposes a `Document` (`platform/core-api/.../Document.java`, also extends
 `UserDataHolder`) via `getDocument()`, plus a `CaretModel` and `SelectionModel` via
 `getCaretModel()` / `getSelectionModel()`. `Document` is the mutable-text-with-offsets
 layer below PSI — see [model-psi.md](model-psi.md) for how the two relate.
@@ -41,7 +41,7 @@ fun replaceSelection(project: Project, editor: Editor, text: String) {
 
 `WriteCommandAction` wraps the write action in an undoable command; `insertString`,
 `deleteString` and `replaceString`
-(`platform/core-api/.../Document.java:150,160,172`) all carry this requirement. Worked
+(`platform/core-api/.../Document.java`) all carry this requirement. Worked
 end-to-end in `editor_basics` (mapped in
 [source-lookup-samples.md](source-lookup-samples.md)):
 `EditorIllustrationAction.java` calls
@@ -50,14 +50,14 @@ end-to-end in `editor_basics` (mapped in
 ## Listening for changes
 
 `Document.addDocumentListener(listener, parentDisposable)`
-(`platform/core-api/.../Document.java:215`) fires `DocumentListener.documentChanged`
-(`platform/core-api/.../event/DocumentListener.java:37`) for one document.
+(`platform/core-api/.../Document.java`) fires `DocumentListener.documentChanged`
+(`platform/core-api/.../event/DocumentListener.java`) for one document.
 `CaretModel.addCaretListener` / `SelectionModel.addSelectionListener`
-(`platform/editor-ui-api/.../CaretModel.java:145`,
-`.../SelectionModel.java:218`) do the same for one editor's caret and selection. To
+(`platform/editor-ui-api/.../CaretModel.java`,
+`.../SelectionModel.java`) do the same for one editor's caret and selection. To
 listen across every open editor instead of one document,
 `EditorFactory.getInstance().getEventMulticaster()`
-(`platform/editor-ui-api/.../EditorFactory.java:223`) exposes the identical
+(`platform/editor-ui-api/.../EditorFactory.java`) exposes the identical
 `addDocumentListener` / `addCaretListener` / `addSelectionListener` methods globally.
 
 All three have a two-argument overload taking a `Disposable` parent — use it. The
