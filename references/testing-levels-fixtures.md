@@ -14,12 +14,12 @@ Unit -> Light -> Integration -> IDE tests -> UI tests
 ```
 
 - **Unit** — plain JUnit, no platform bootstrap.
-- **Light** — `BasePlatformTestCase` (`platform/testFramework/src/com/intellij/testFramework/fixtures/BasePlatformTestCase.java:29`, extends `UsefulTestCase`) or `LightJavaCodeInsightFixtureTestCase` (`java/testFramework/src/com/intellij/testFramework/fixtures/LightJavaCodeInsightFixtureTestCase.java:68`): an in-memory project, exposed as `myFixture` (`CodeInsightTestFixture`, `platform/testFramework/src/com/intellij/testFramework/fixtures/CodeInsightTestFixture.java:82`).
-- **Integration** — `HeavyPlatformTestCase` (`platform/testFramework/src/com/intellij/testFramework/HeavyPlatformTestCase.java:98`): a real project on disk; its own javadoc recommends light tests "whenever possible" for the performance difference.
-- **IDE tests** — IntelliJ IDE Starter's `Starter.newContext()` (`tools/intellij.tools.ide.starter/src/com/intellij/ide/starter/runner/Starter.kt:9`, method at `:21`) launches a real, installed IDE process.
-- **UI tests** — the `Driver` interface (`platform/remote-driver/client/src/com/intellij/driver/client/Driver.kt:65`) drives that running IDE's actual UI.
+- **Light** — `BasePlatformTestCase` (`platform/testFramework/src/com/intellij/testFramework/fixtures/BasePlatformTestCase.java`, extends `UsefulTestCase`) or `LightJavaCodeInsightFixtureTestCase` (`java/testFramework/src/com/intellij/testFramework/fixtures/LightJavaCodeInsightFixtureTestCase.java`): an in-memory project, exposed as `myFixture` (`CodeInsightTestFixture`, `platform/testFramework/src/com/intellij/testFramework/fixtures/CodeInsightTestFixture.java`).
+- **Integration** — `HeavyPlatformTestCase` (`platform/testFramework/src/com/intellij/testFramework/HeavyPlatformTestCase.java`): a real project on disk; its own javadoc recommends light tests "whenever possible" for the performance difference.
+- **IDE tests** — IntelliJ IDE Starter's `Starter.newContext()` (`tools/intellij.tools.ide.starter/src/com/intellij/ide/starter/runner/Starter.kt`) launches a real, installed IDE process.
+- **UI tests** — the `Driver` interface (`platform/remote-driver/client/src/com/intellij/driver/client/Driver.kt`) drives that running IDE's actual UI.
 
-Neither `$IJ_SAMPLES` nor the template has a worked example for the IDE tests or UI tests rungs; the two citations above point at the class declarations only.
+Neither `$IJ_SAMPLES` nor the template has a worked example for the IDE tests or UI tests rungs; `Starter.kt` and `Driver.kt` above point at declarations only, not worked examples.
 
 **Wrong (Integration level for a claim Light already covers):**
 
@@ -41,25 +41,25 @@ class MyPluginTest : BasePlatformTestCase() {
 }
 ```
 
-`configureByText(FileType, String)` (`CodeInsightTestFixture.java:186`) and `XmlFileType`
-(`xml/xml-psi-impl/src/com/intellij/ide/highlighter/XmlFileType.java:12`) are the
+`configureByText(FileType, String)` (`CodeInsightTestFixture.java`) and `XmlFileType`
+(`xml/xml-psi-impl/src/com/intellij/ide/highlighter/XmlFileType.java`) are the
 identifiers above, taken from the template's `MyPluginTest.kt`.
 
 ## Wiring and layout
 
 The framework artifact is declared once, in the build —
 `testFramework(TestFrameworkType.Platform)` inside `dependencies { intellijPlatform { } }`;
-see [setup-build.md](setup-build.md) for the full block. `$PLUGIN_TEMPLATE_HOME/build.gradle.kts:15`
+see [setup-build.md](setup-build.md) for the full block. `$PLUGIN_TEMPLATE_HOME/build.gradle.kts`
 carries it verbatim.
 
 Fixture-backed tests read from `src/test/testData`, one subdirectory per feature;
-`getTestDataPath()` (`BasePlatformTestCase.java:98`) points at it, and `@TestDataPath`
-(`platform/testFramework/src/com/intellij/testFramework/TestDataPath.java:20`) documents
+`getTestDataPath()` (`BasePlatformTestCase.java`) points at it, and `@TestDataPath`
+(`platform/testFramework/src/com/intellij/testFramework/TestDataPath.java`) documents
 the same path for IDE navigation (it does not affect test execution). A
 before/after pair — `foo.xml` and `foo_after.xml` under `src/test/testData/rename/` in the
 template — is the standard shape for "run an action, compare the result":
 `myFixture.testRename("foo.xml", "foo_after.xml", "a2")`
-(`CodeInsightTestFixture.java:543`, the 3-arg-plus-varargs overload).
+(`CodeInsightTestFixture.java`, the 3-arg-plus-varargs overload).
 
 A bug fix ships with a regression test at the lowest level that reproduces it — most PSI/editor fixes
 reproduce at Light; reserve Integration and above for behavior only a heavier fixture can observe.

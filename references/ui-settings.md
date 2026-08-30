@@ -7,11 +7,11 @@ verify: IJ_SRC="${IJ_SRC:?}"; f=references/ui-settings.md; body=$(awk 'BEGIN{c=0
 ## Bind a settings page to state with BoundConfigurable, not manual sync
 
 State storage and the settings UI are two separate contracts. `PersistentStateComponent<T>`
-(`platform/projectModel-api/.../components/PersistentStateComponent.java:22`) persists a
+(`platform/projectModel-api/.../components/PersistentStateComponent.java`) persists a
 plain state object via `getState()`/`loadState(T)`, driven by `@State`
-(`.../components/State.java:18`) and `@Storage` (`.../components/Storage.java:18`) on
+(`.../components/State.java`) and `@Storage` (`.../components/Storage.java`) on
 the component class. `Configurable`
-(`platform/ide-core/src/com/intellij/openapi/options/Configurable.java:133`, extends
+(`platform/ide-core/src/com/intellij/openapi/options/Configurable.java`, extends
 `UnnamedConfigurable`) is the page shown in Settings; nothing forces its `isModified()` /
 `apply()` / `reset()` to actually agree with the state object.
 
@@ -39,7 +39,7 @@ class MySettingsConfigurable : BoundConfigurable("My Plugin") {
 }
 ```
 
-`BoundConfigurable` (`platform/platform-api/.../options/BoundConfigurable.kt:15`,
+`BoundConfigurable` (`platform/platform-api/.../options/BoundConfigurable.kt`,
 abstract class) wires `panel { }`'s bindings into `isModified()`/`apply()`/`reset()`
 for you — see [ui-dsl-dialogs.md](ui-dsl-dialogs.md) for `panel`/`row`/`cell`/`bindText`
 themselves. `settings`'s `AppSettings`/`AppSettingsConfigurable`
@@ -47,14 +47,14 @@ themselves. `settings`'s `AppSettings`/`AppSettingsConfigurable`
 [source-lookup-samples.md](source-lookup-samples.md)) shows the raw, unbound form
 above verbatim; `oauth2`'s `AuthConfigurable` shows the `BoundConfigurable` + `panel { }`
 form. A page that needs `focusOn(@NotNull @Nls String label)`
-(`Configurable.java:265`) to jump to one field is a signal it grew past one screen —
+(`Configurable.java`) to jump to one field is a signal it grew past one screen —
 split it rather than growing `createPanel()` further.
 
 ## Registration and migration
 
-`applicationConfigurable`/`projectConfigurable` are declared with `name=` in
-`platform/platform-resources/src/META-INF/PlatformExtensionPoints.xml:27` and `:20`
-respectively — search both `name="..."` and `qualifiedName="...<EP>"` forms before
+`applicationConfigurable`/`projectConfigurable` are both declared with `name=` in
+`platform/platform-resources/src/META-INF/PlatformExtensionPoints.xml` — search both
+`name="..."` and `qualifiedName="...<EP>"` forms before
 concluding either is invented (see
 [source-lookup.md](source-lookup.md#search-recipes)). Renaming a field or bumping
 `@Storage`'s file changes what `loadState` receives on old data; deserialize
