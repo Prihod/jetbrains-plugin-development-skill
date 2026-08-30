@@ -87,6 +87,7 @@ Do not skip these because the API "looks obvious" — obvious APIs are the ones 
 | Decide which thread to run on | [references/threading-model.md](references/threading-model.md) |
 | Read or write the code model safely | [references/threading-read-write.md](references/threading-read-write.md) |
 | Use coroutines without leaking scopes | [references/threading-coroutines.md](references/threading-coroutines.md) |
+| Pick a constructor the container can call | [references/threading-service-constructor-shapes.md](references/threading-service-constructor-shapes.md) |
 | Own a lifecycle; subscribe and unsubscribe | [references/lifecycle-disposable-messagebus.md](references/lifecycle-disposable-messagebus.md) |
 | Work with PSI, indexes and dumb mode | [references/model-psi.md](references/model-psi.md) |
 | Work with virtual files | [references/model-vfs.md](references/model-vfs.md) |

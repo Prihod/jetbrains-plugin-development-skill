@@ -1,7 +1,7 @@
 ---
 title: Use coroutines without leaking scopes
 tags: threading, coroutines, structured-concurrency, disposable
-verify: HOME="${HOME:?}"; f=references/threading-coroutines.md; body=$(awk 'BEGIN{c=0}/^---$/{c++;next}c>=2' "$f"); d=$(ls -d "$HOME"/.gradle/caches/*/transforms/*/transformed/ideaIU-2025.2.6.2 2>/dev/null | head -1); test -n "$d" || exit 1; bt=$(find "$d" -maxdepth 2 -name build.txt | head -1); test -n "$bt" || exit 1; real=$(cat "$bt"); j="$d/lib/app-client.jar"; app='expected (), (CoroutineScope), (Application), or (Application, CoroutineScope)'; prj='expected (Project), (Project, CoroutineScope), (CoroutineScope), or ()'; mod='expected (Module) or ()'; unzip -p "$j" com/intellij/serviceContainer/ComponentManagerImpl.class | LC_ALL=C grep -qF "$app" || exit 1; unzip -p "$j" com/intellij/openapi/project/impl/ProjectImpl.class | LC_ALL=C grep -qF "$prj" || exit 1; unzip -p "$j" com/intellij/openapi/module/impl/ModuleComponentManager.class | LC_ALL=C grep -qF "$mod" || exit 1; norm=$(printf '%s' "$body" | tr '\n' ' ' | tr -s ' '); for s in '`()`, `(CoroutineScope)`, `(Application)`, `(Application, CoroutineScope)`' '`()`, `(CoroutineScope)`, `(Project)`, `(Project, CoroutineScope)`' '`()`, `(Module)`' "$prj"; do printf '%s' "$norm" | grep -qF "$s" || exit 1; done; printf '%s' "$norm" | grep -qF "$real" || exit 1; for x in $(printf '%s' "$norm" | grep -oE '[A-Z]{2}-[0-9]+\.[0-9]+\.[0-9]+'); do test "$x" = "$real" || exit 1; done
+verify: IJ_SRC="${IJ_SRC:?}"; f=references/threading-coroutines.md; body=$(awk 'BEGIN{c=0}/^---$/{c++;next}c>=2' "$f"); norm=$(printf '%s' "$body" | tr '\n' ' ' | tr -s ' '); k="$IJ_SRC/platform/util/coroutines/src/coroutineScope.kt"; test -f "$k" || exit 1; test "$(grep -c 'fun CoroutineScope.childScope(' "$k")" -ge 2 || exit 1; grep -qF 'until [this] scope is canceled' "$k" || exit 1; for s in 'CoroutineScope(SupervisorJob())' '@Service(Service.Level.PROJECT)' 'scope.childScope("MyService.request")' 'GlobalScope.launch' 'threading-service-constructor-shapes.md' 'lives until the parent does'; do printf '%s' "$norm" | grep -qF "$s" || exit 1; done
 ---
 
 ## Use coroutines without leaking scopes
@@ -28,31 +28,14 @@ class MyService(project: Project, private val scope: CoroutineScope) {
 }
 ```
 
-**Which constructor shapes are accepted depends on the container**, not on one
-platform-wide list: `ProjectImpl` overrides the lookup `ComponentManagerImpl` defines,
-and the module container overrides it again. At the Baseline's target build
-`IU-252.28539.54`:
+That injection is not unconditional: the container calls a constructor only if its
+parameters match one of the shapes **that container** accepts, and the shapes differ by
+level — the default project and the module container inject no scope at all. Check your
+level before writing the signature:
+[threading-service-constructor-shapes.md](threading-service-constructor-shapes.md).
 
-| Level — container doing the lookup | Accepted constructor shapes |
-|---|---|
-| `APP` — `ComponentManagerImpl` | `()`, `(CoroutineScope)`, `(Application)`, `(Application, CoroutineScope)` |
-| `PROJECT` — `ProjectImpl` | `()`, `(CoroutineScope)`, `(Project)`, `(Project, CoroutineScope)` |
-| module — `ModuleComponentManager` | `()`, `(Module)` — no scope is injected at all |
-
-So `(Project, CoroutineScope)` in the example above is the project-level list, not a
-fifth application-level shape; and a module-level service that wants a scope has to get
-one some other way. The container looks up exactly its own level's shapes by reflection
-and injects a scope it owns and cancels together with the service, so no manual
-`Disposer.register` is needed for that scope specifically. Read your level's list out
-of the build you target — each container spells it out in the message it throws:
-
-```bash
-DIST=$(ls -d ~/.gradle/caches/*/transforms/*/transformed/ideaIU-*/ | head -1)
-unzip -p "$DIST/lib/app-client.jar" \
-  com/intellij/openapi/project/impl/ProjectImpl.class |
-  strings | grep 'Cannot find suitable constructor'
-# Cannot find suitable constructor, expected (Project), (Project, CoroutineScope), (CoroutineScope), or ()
-```
+The injected scope is owned and canceled by the container together with the service, so
+no manual `Disposer.register` is needed for that scope specifically.
 
 Narrower work than the service's own lifetime gets a named child instead of reusing
 the injected scope directly, so it can be canceled early without tearing down the
@@ -72,9 +55,6 @@ nothing calls `GlobalScope.launch` or builds a bare `CoroutineScope()` with no
 registered owner. For subscribing to the message bus from inside a coroutine, see
 [lifecycle-disposable-messagebus.md](lifecycle-disposable-messagebus.md).
 
-Reference: `com/intellij/serviceContainer/ComponentManagerImpl.class`,
-`com/intellij/openapi/project/impl/ProjectImpl.class` and
-`com/intellij/openapi/module/impl/ModuleComponentManager.class` inside
-`lib/app-client.jar` of the resolved `IU-252.28539.54` distribution
-(`findConstructorAndInstantiateClass`); `platform/util/coroutines/src/coroutineScope.kt`
-(`childScope`).
+Reference: `platform/util/coroutines/src/coroutineScope.kt` — `childScope`, in two
+overloads, the second taking a `name: String`; its own doc comment is where the
+"lives until the parent is canceled" wording above comes from.

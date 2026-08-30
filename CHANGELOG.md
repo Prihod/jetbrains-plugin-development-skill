@@ -10,18 +10,18 @@ First release.
 
 ### Contents
 
-- `SKILL.md`, 119 lines: the pinned build baseline, target detection, 12 critical rules, the
+- `SKILL.md`, 120 lines: the pinned build baseline, target detection, 12 critical rules, the
   API-verification procedure, and a navigation table with one row per reference.
-- 45 reference files (a 46th, `_template.md`, is the authoring template). By family: 3 `source-*`,
-  7 `antipatterns-*`, 4 `setup-*`, 4 `extend-*`, 3 `threading-*`, 1 `lifecycle-*`, 3 `model-*`,
+- 46 reference files (a 47th, `_template.md`, is the authoring template). By family: 3 `source-*`,
+  7 `antipatterns-*`, 4 `setup-*`, 4 `extend-*`, 4 `threading-*`, 1 `lifecycle-*`, 3 `model-*`,
   2 `editor-*`, 4 `ui-*`, 3 `testing-*`, 3 `compat-*`, 5 `workflow-*`, 3 `php-*`.
-- Every one of the 45 carries a `verify:` command in its frontmatter. 43 re-derive the file's
+- Every one of the 46 carries a `verify:` command in its frontmatter. 44 re-derive the file's
   central claim from a first-hand source outside the skill and abort when the variable naming it
   is unset; the remaining two — `workflow-test-and-debug.md` and `workflow-upgrade-platform.md` —
   check only the skill's own files. Each command also anchors to a literal its own body asserts,
   so the check turns red on two independent kinds of rot: the platform moving, and this file no
-  longer saying what it says today. The source repository's validator runs all 45 and re-runs each
-  against a gutted copy of its own file, requiring red — `45 run, 0 skipped`, with no exception
+  longer saying what it says today. The source repository's validator runs all 46 and re-runs each
+  against a gutted copy of its own file, requiring red — `46 run, 0 skipped`, with no exception
   list a reference could be parked in.
 - No reference cites a source line number. A citation naming a file and a line asserts something
   no `verify:` can check: the commands grep the source by symbol and only *print* the number, so
@@ -78,7 +78,7 @@ these files as ordinary Markdown; no adapter for them is shipped or tested.
 
 - Antipatterns are split by topic into **seven** files, not the two the specification prescribed
   with a fixed id assignment. Accuracy of file naming beat conformance to the older layout.
-- Reference count: the planning artefacts say 36; the shipped, measured count is **45**.
+- Reference count: the planning artefacts say 36; the shipped, measured count is **46**.
 - One navigation row is worded differently from the plan text, so that inlay hints — which
   `editor-inspections-completion.md` covers — are findable in the table.
 - The PhpStorm references locate the IDE through `PHPSTORM_HOME` rather than an absolute path, so

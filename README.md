@@ -80,14 +80,14 @@ documentation and is required to **say out loud that its confidence is lower** i
 the gap with a guess (`SKILL.md`, *Verifying an unfamiliar API*; `references/source-lookup.md`
 step 5). The fallback is a documented degradation, not a silent one — and the verification
 commands degrade the same way. One of them used to report 21 missing sample directories and still
-exit zero; acceptance found that, and the guards were hardened: 43 of the 45 `verify:` commands now
+exit zero; acceptance found that, and the guards were hardened: 44 of the 46 `verify:` commands now
 abort on an unset variable instead of expanding it to an empty path, and the two that do not need
 one check only the skill's own files.
 
 ## Layout
 
-    SKILL.md             119 lines: baseline table, Step 0, 12 critical rules, navigation
-    references/          46 files: 45 references + _template.md
+    SKILL.md             120 lines: baseline table, Step 0, 12 critical rules, navigation
+    references/          47 files: 46 references + _template.md
     agents/openai.yaml   Codex interface adapter
     .claude-plugin/      plugin.json and marketplace.json: install as a Claude Code plugin
     README.md
@@ -95,7 +95,7 @@ one check only the skill's own files.
     LICENSE
 
 `SKILL.md` is always in context; a reference is read only when the navigation table sends the
-agent to it. Every one of the 45 references carries a `verify:` command in its frontmatter — a
+agent to it. Every one of the 46 references carries a `verify:` command in its frontmatter — a
 command that re-derives the file's own central claim from a real source, so the file can be
 checked instead of trusted. (`_template.md` is the authoring template and is excluded from that
 set.)
@@ -160,9 +160,11 @@ Markdown; no adapter is shipped for them and none was tested.
 The acceptance exercise also has stated limits, kept here rather than in a drawer: a "fresh
 session" was a fresh subagent on the same machine with warm caches, not an isolated environment;
 both reruns happened after the skill had been fixed, which tests the fix and not the original;
-and 20 of the 45 `verify:` commands still stay green when their own file's body is emptied — they
-re-derive a platform fact but assert nothing about the prose citing it. The repository's validator
-now runs every `verify:` and enforces that gap as a closed list rather than leaving it unmeasured.
+and at acceptance 20 of the then 45 `verify:` commands still stayed green when their own file's
+body was emptied — they re-derived a platform fact but asserted nothing about the prose citing it.
+That gap has since been closed: every `verify:` is now anchored to a literal its own body asserts,
+the validator re-runs each one against a gutted copy of its file and requires red, and the list of
+permitted exceptions was deleted rather than shortened.
 
 ## Known deviations from the specification
 
@@ -173,7 +175,7 @@ skill differs, the skill is what shipped:
   (with its own id assignment). The split follows subject matter, so a file's name matches its
   contents.
 - **Reference count.** Every planning artefact in this project says 36 references. The shipped
-  count is 45; it was measured, not copied, and the planning number was already stale four tasks
+  count is 46; it was measured, not copied, and the planning number was already stale four tasks
   before release.
 - **One navigation row is worded differently from the plan text** — the row for
   `editor-inspections-completion.md` names inlay hints, because the file covers them and a reader
