@@ -4,7 +4,7 @@ All notable changes to this skill are recorded here. Versions follow `MAJOR.MINO
 independently of the IntelliJ Platform's own versions: MAJOR for structural or incompatible
 change, MINOR for new topics, workflows or IDEs, PATCH for corrections to text and links.
 
-## 1.0.0 — 2026-08-28
+## 1.0.0 — 2026-08-31
 
 First release.
 
@@ -23,6 +23,14 @@ First release.
   longer saying what it says today. The source repository's validator runs all 45 and re-runs each
   against a gutted copy of its own file, requiring red — `45 run, 0 skipped`, with no exception
   list a reference could be parked in.
+- No reference cites a source line number. A citation naming a file and a line asserts something
+  no `verify:` can check: the commands grep the source by symbol and only *print* the number, so
+  on a reader's own checkout of the platform sources — rarely the pinned baseline — the number
+  silently points at the wrong line while the symbol beside it still resolves. References name the
+  file and the symbol instead. The source repository's validator fails on any citation in either
+  of the two banned written forms, and its negative-test harness plants one and requires the
+  validator to go red; the ban reaches stack frames and pasted `grep -n` output as well, which rot
+  the same way.
 - `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`: the repository is its own
   Claude Code marketplace, so the skill installs with `/plugin install` as well as by pointing an
   agent's skills directory at the checkout. The skill sits at the repository root, which Claude
