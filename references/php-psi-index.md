@@ -1,7 +1,7 @@
 ---
 title: Work with PHP PSI and PhpIndex
 tags: php, phpstorm, psi, index
-verify: PHPSTORM_HOME="${PHPSTORM_HOME:?}"; JAR="$PHPSTORM_HOME/Contents/plugins/php/lib/php-openapi-src.jar"; total=0; missing=0; for c in $(sed '1,/^---$/d' references/php-psi-index.md | grep -oE '`Php[A-Za-z]+`' | tr -d '`' | sort -u); do total=$((total+1)); unzip -l "$JAR" | grep -q "/$c\.java$" || { echo "MISSING: $c"; missing=$((missing+1)); }; done; test "$total" -gt 0 -a "$missing" -eq 0 || exit 1; X="$PHPSTORM_HOME/Contents/plugins/php-impl/lib/php.jar"; tags=$(unzip -p "$X" META-INF/plugin.xml | tr '\n' ' '); li=$(printf '%s' "$tags" | grep -o '<localInspection[^>]*>'); cc=$(printf '%s' "$tags" | grep -o '<completion.contributor[^>]*>'); n_all=$(printf '%s\n' "$li" | grep -c .); n_php=$(printf '%s\n' "$li" | grep -c 'language="PHP"'); c_all=$(printf '%s\n' "$cc" | grep -c .); c_php=$(printf '%s\n' "$cc" | grep -c 'language="PHP"'); test "$n_php" -lt "$n_all" || exit 1; body=$(sed '1,/^---$/d' references/php-psi-index.md); norm=$(printf '%s' "$body" | tr '\n' ' ' | tr -s ' '); for s in "of the $n_all \`<localInspection>\` entries" "$n_php carry" "$c_php of $c_all \`<completion.contributor>\`" "# $n_php"; do printf '%s' "$norm" | grep -qF "$s" || exit 1; done
+verify: PHPSTORM_HOME="${PHPSTORM_HOME:?}"; JAR="$PHPSTORM_HOME/Contents/plugins/php/lib/php-openapi-src.jar"; total=0; missing=0; for c in $(sed '1,/^---$/d' references/php-psi-index.md | grep -oE '`Php[A-Za-z]+`' | tr -d '`' | sort -u); do total=$((total+1)); unzip -l "$JAR" | grep -q "/$c\.java$" || { echo "MISSING: $c"; missing=$((missing+1)); }; done; test "$total" -gt 0 -a "$missing" -eq 0 || exit 1; X="$PHPSTORM_HOME/Contents/plugins/php-impl/lib/php.jar"; tags=$(unzip -p "$X" META-INF/plugin.xml | tr '\n' ' '); li=$(printf '%s' "$tags" | grep -o '<localInspection[^>]*>'); cc=$(printf '%s' "$tags" | grep -o '<completion.contributor[^>]*>'); n_all=$(printf '%s\n' "$li" | grep -c .); n_php=$(printf '%s\n' "$li" | grep -c 'language="PHP"'); c_all=$(printf '%s\n' "$cc" | grep -c .); c_php=$(printf '%s\n' "$cc" | grep -c 'language="PHP"'); n_json=$(printf '%s\n' "$li" | grep -c 'language="JSON"'); n_re=$(printf '%s\n' "$li" | grep -c 'language="RegExp"'); n_js=$(printf '%s\n' "$li" | grep -c 'language="JavaScript"'); n_rest=$((n_all-n_php)); test "$n_php" -lt "$n_all" || exit 1; test $((n_json+n_re+n_js)) -eq "$n_rest" || exit 1; body=$(sed '1,/^---$/d' references/php-psi-index.md); norm=$(printf '%s' "$body" | tr '\n' ' ' | tr -s ' '); for s in "of the $n_all \`<localInspection>\` entries" "$n_php carry" "the other $n_rest are $n_json \`JSON\`, $n_re \`RegExp\` and $n_js \`JavaScript\`" "$c_php of $c_all \`<completion.contributor>\`" "# $n_php"; do printf '%s' "$norm" | grep -qF "$s" || exit 1; done
 ---
 
 ## Work with PHP PSI and PhpIndex
@@ -48,10 +48,10 @@ points — `localInspection`, `completion.contributor` — scoped with a `langua
 attribute. **Verified fact** (from the PHP plugin's own *compiled* descriptor, not the
 sources archive the rest of this file cites): in
 `$PHPSTORM_HOME/Contents/plugins/php-impl/lib/php.jar!/META-INF/plugin.xml`, of the 391
-`<localInspection>` entries 383 carry `language="PHP"` (the rest are `JavaScript` and
-`JSON` inspections merely grouped under PHP), and 13 of 15 `<completion.contributor>`
-entries do. Count whole tags: `language` is not always the first attribute, so the
-obvious line-prefix grep silently undercounts.
+`<localInspection>` entries 383 carry `language="PHP"` (the other 8 are 4 `JSON`, 2
+`RegExp` and 2 `JavaScript` inspections merely grouped under PHP), and 13 of 15
+`<completion.contributor>` entries do. Count whole tags: `language` is not always the
+first attribute, so the obvious line-prefix grep silently undercounts.
 
 ```bash
 unzip -p "$PHPSTORM_HOME/Contents/plugins/php-impl/lib/php.jar" META-INF/plugin.xml |
