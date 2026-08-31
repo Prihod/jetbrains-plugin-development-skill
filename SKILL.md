@@ -17,7 +17,7 @@ metadata:
 
 ## Baseline
 
-Skill version 1.0.0 — baseline validated 2026-08-26 against the official `intellij-platform-plugin-template`.
+Skill version 1.0.0 — baseline captured 2026-08-26 from the official `intellij-platform-plugin-template` and re-derived from it on every check.
 These are the current defaults, not the ones most tutorials show.
 
 | What | Value |

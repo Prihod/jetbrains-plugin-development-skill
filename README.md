@@ -3,8 +3,8 @@
 An Agent Skill for building, debugging, testing and maintaining plugins for IntelliJ Platform
 IDEs — IntelliJ IDEA, PhpStorm, WebStorm, PyCharm, GoLand.
 
-**Version 1.0.0.** Baseline captured and validated 2026-08-26; acceptance exercises run
-2026-08-27, on Claude only.
+**Version 1.0.0.** Baseline captured 2026-08-26 from the official plugin template and
+re-derived from it on every validator run; acceptance exercises run 2026-08-27, on Claude only.
 
 ## What it is for
 
