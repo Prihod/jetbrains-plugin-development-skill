@@ -70,8 +70,9 @@ expanding to an empty path.
 | `PLUGIN_TEMPLATE_HOME` | an `intellij-platform-plugin-template` checkout | the reference build configuration the Baseline table in `SKILL.md` is derived from and re-checked against |
 | `PHPSTORM_HOME` | an installed PhpStorm | the only authoritative source for the closed-source PHP API (`php-openapi-src.jar` inside the IDE) |
 
-`references/source-lookup.md` also names `INTELLIJ_COMMUNITY_HOME` as a variable a project may
-already set for the same checkout, but every command in the skill reads `IJ_SRC`.
+These four names are this skill's own convention, not a platform-wide one — `intellij-community`
+defines no such variable. A project that already keeps a checkout under some other name points
+`IJ_SRC` at the same path; nothing here reads any other variable.
 
 ### It works without any local checkout
 

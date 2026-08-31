@@ -9,9 +9,9 @@ verify: IJ_SRC="${IJ_SRC:?}"; IJ_SAMPLES="${IJ_SAMPLES:?}"; PHPSTORM_HOME="${PHP
 Never reconstruct an IntelliJ Platform API from memory. Locate a real source and
 read it. Search in this order, stopping at the first hit:
 
-1. **Explicit configuration** — an environment variable the project already sets
-   (e.g. `INTELLIJ_COMMUNITY_HOME`, `IJ_SRC`, `IJ_SAMPLES`) or a path in project
-   settings.
+1. **Explicit configuration** — an environment variable the project itself sets, or a
+   path in project settings. No name is standard; this skill's commands read `IJ_SRC`,
+   `IJ_SAMPLES`, `PLUGIN_TEMPLATE_HOME` and `PHPSTORM_HOME`.
 2. **An installed JetBrains IDE** — almost always present on a dev machine:
    - macOS: `/Applications/<IDE>.app/Contents/plugins/`, `~/Applications/JetBrains Toolbox/`
    - Linux: `~/.local/share/JetBrains/Toolbox/apps/`
