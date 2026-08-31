@@ -13,6 +13,7 @@ duplicates a mechanism every other plugin already knows how to use.
 **Search first:**
 
 ```bash
+# ripgrep; `grep -rn --include='*.xml'` does the same without it.
 rg -n '<extensionPoint[^>]*name="<EP-NAME>"' "$IJ_SRC" -g '*.xml'
 ```
 

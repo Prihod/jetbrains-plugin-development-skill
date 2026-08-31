@@ -37,12 +37,12 @@ PhpStorm — no other source substitutes for it.
 
 **Verified fact:** the Gradle cache
 (`~/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/`) holds platform
-artifacts, but `-sources.jar` files may be absent from it. Do not rely on the Gradle
-cache as a source of sources.
+artifacts, but `-sources.jar` files may be absent. Do not use it as a source of sources.
 
 ## Search recipes
 
 ```bash
+# These use ripgrep. Without it, `grep -rn` with `--include` does the same job.
 # Where is a symbol declared?
 rg -n "interface ActionUpdateThreadAware" "$IJ_SRC/platform"
 
